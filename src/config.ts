@@ -5,7 +5,9 @@ dotenv.config();
 export const config = {
   discordBotToken: process.env.DISCORD_BOT_TOKEN || '',
   discordChannelId: process.env.DISCORD_CHANNEL_ID || '',
-  pumpfunApiUrl: process.env.PUMPFUN_API_URL || 'https://frontend-api.pump.fun/coins',
+  moralisApiKey: process.env.MORALIS_API_KEY || '',
+  moralisBaseUrl: process.env.MORALIS_BASE_URL || 'https://solana-gateway.moralis.io',
+  pumpfunProgramAddress: process.env.PUMPFUN_PROGRAM_ADDRESS || '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P',
   pollInterval: parseInt(process.env.POLL_INTERVAL || '60', 10) * 1000,
   
   // Alert threshold
@@ -31,6 +33,11 @@ export function validateConfig(): boolean {
   
   if (!config.discordChannelId) {
     console.error('Error: DISCORD_CHANNEL_ID is not set in .env file');
+    return false;
+  }
+  
+  if (!config.moralisApiKey) {
+    console.error('Error: MORALIS_API_KEY is not set in .env file');
     return false;
   }
   

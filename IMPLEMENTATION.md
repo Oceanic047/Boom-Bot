@@ -2,8 +2,9 @@
 
 ## ✅ Requirements Completed
 
-### 1. Monitor Meme Coin Launches via Pump.fun API
-- ✅ `pumpfunClient.ts`: Fetches coins from Pump.fun API endpoint
+### 1. Monitor Meme Coin Launches via Moralis API
+- ✅ `pumpfunClient.ts`: Fetches Pump.fun coins from Moralis Web3 Data API
+- ✅ Uses Moralis Solana gateway for reliable data access
 - ✅ Configurable polling interval (default: 60 seconds)
 - ✅ Deduplication logic to avoid processing same coin twice
 - ✅ Error handling for API failures
@@ -63,7 +64,9 @@ src/
 
 ### Configuration Options
 - Discord bot token and channel ID (required)
-- API endpoint URL
+- Moralis API key (required)
+- Moralis base URL
+- Pump.fun program address
 - Polling interval
 - Alert score threshold
 - Minimum volume/liquidity/holder thresholds

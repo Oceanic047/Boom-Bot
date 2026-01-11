@@ -1,10 +1,10 @@
 # Boom-Bot 🚀
 
-A sophisticated Discord bot that monitors meme coin launches via the Pump.fun API, analyzes market signals, and posts real-time alerts with comprehensive trend scoring.
+A sophisticated Discord bot that monitors meme coin launches on Pump.fun via the Moralis Web3 Data API, analyzes market signals, and posts real-time alerts with comprehensive trend scoring.
 
 ## Features
 
-✨ **Real-time Monitoring**: Continuously tracks new meme coin launches on Pump.fun  
+✨ **Real-time Monitoring**: Continuously tracks new meme coin launches on Pump.fun via Moralis API  
 📊 **Signal Analysis**: Analyzes volume growth, liquidity, holder count, and coin age  
 🎯 **Trend Scoring**: Calculates a 0-100 trend score based on weighted metrics  
 🔔 **Discord Alerts**: Posts formatted alerts with token stats and visual indicators  
@@ -12,7 +12,7 @@ A sophisticated Discord bot that monitors meme coin launches via the Pump.fun AP
 
 ## How It Works
 
-1. **Fetch**: Polls the Pump.fun API at regular intervals for new coin launches
+1. **Fetch**: Polls the Moralis API at regular intervals for new Pump.fun coin launches
 2. **Track**: Records metadata including name, symbol, creation time, and age
 3. **Analyze**: Evaluates market signals:
    - 24-hour trading volume
@@ -33,6 +33,7 @@ A sophisticated Discord bot that monitors meme coin launches via the Pump.fun AP
 - Node.js 18+ 
 - npm or yarn
 - A Discord bot token and channel ID
+- A Moralis API key (free tier available at [moralis.io](https://moralis.io))
 
 ### Setup
 
@@ -52,13 +53,16 @@ npm install
 cp .env.example .env
 ```
 
-4. Edit `.env` and add your Discord bot token and channel ID:
+4. Edit `.env` and add your Discord bot token, channel ID, and Moralis API key:
 ```env
 DISCORD_BOT_TOKEN=your_bot_token_here
 DISCORD_CHANNEL_ID=your_channel_id_here
+MORALIS_API_KEY=your_moralis_api_key_here
 ```
 
-### How to Get Discord Bot Token and Channel ID
+### How to Get Required Credentials
+
+#### Discord Bot Token and Channel ID
 
 1. **Create a Discord Bot**:
    - Go to [Discord Developer Portal](https://discord.com/developers/applications)
@@ -79,6 +83,17 @@ DISCORD_CHANNEL_ID=your_channel_id_here
    - Enable Developer Mode in Discord: User Settings > Advanced > Developer Mode
    - Right-click on the channel where you want alerts and click "Copy ID" (this is your `DISCORD_CHANNEL_ID`)
 
+#### Moralis API Key
+
+1. **Create a Moralis Account**:
+   - Go to [Moralis.io](https://moralis.io) and sign up for a free account
+   
+2. **Get Your API Key**:
+   - After signing in, go to your dashboard
+   - Navigate to "Web3 APIs" section
+   - Copy your API key (this is your `MORALIS_API_KEY`)
+   - The free tier is sufficient for most use cases
+
 ## Configuration
 
 Edit `.env` to customize bot behavior:
@@ -88,8 +103,12 @@ Edit `.env` to customize bot behavior:
 DISCORD_BOT_TOKEN=your_bot_token_here
 DISCORD_CHANNEL_ID=your_channel_id_here
 
-# API Endpoint
-PUMPFUN_API_URL=https://frontend-api.pump.fun/coins
+# Moralis API (Required)
+MORALIS_API_KEY=your_moralis_api_key_here
+MORALIS_BASE_URL=https://solana-gateway.moralis.io
+
+# Pump.fun Configuration
+PUMPFUN_PROGRAM_ADDRESS=6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P
 
 # Polling interval in seconds
 POLL_INTERVAL=60
@@ -208,7 +227,7 @@ npm run lint
 
 ### Bot not starting
 
-- Ensure `DISCORD_BOT_TOKEN` and `DISCORD_CHANNEL_ID` are set in `.env`
+- Ensure `DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID`, and `MORALIS_API_KEY` are set in `.env`
 - Check Node.js version (requires 18+)
 - Verify dependencies are installed: `npm install`
 - Verify bot has been invited to your server
@@ -224,9 +243,10 @@ npm run lint
 
 ### API errors
 
-- Pump.fun API may have rate limits
+- Moralis API may have rate limits (free tier has limits)
 - Check internet connectivity
-- Verify API endpoint URL is correct
+- Verify Moralis API key is valid and active
+- Check that you haven't exceeded your API quota
 
 ## License
 

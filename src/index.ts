@@ -26,7 +26,7 @@ class BoomBot {
     }
 
     console.log('🚀 Boom Bot starting...');
-    console.log(`📡 Monitoring Pump.fun API: ${config.pumpfunApiUrl}`);
+    console.log(`📡 Using Moralis API: ${config.moralisBaseUrl}`);
     console.log(`⏱️  Poll interval: ${config.pollInterval / 1000}s`);
     console.log(`🎯 Min volume threshold: $${config.minVolumeThreshold}`);
     console.log(`💧 Min liquidity threshold: $${config.minLiquidityThreshold}`);
