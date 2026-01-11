@@ -14,17 +14,19 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and set your Discord bot token and channel ID:
+Edit `.env` and set your Discord bot token, channel ID, and Moralis API key:
 ```env
 DISCORD_BOT_TOKEN=your_bot_token_here
 DISCORD_CHANNEL_ID=your_channel_id_here
+MORALIS_API_KEY=your_moralis_api_key_here
 ```
 
 **How to get these values:**
-1. Create a bot at [Discord Developer Portal](https://discord.com/developers/applications)
+1. **Discord**: Create a bot at [Discord Developer Portal](https://discord.com/developers/applications)
 2. Copy the bot token from the "Bot" tab
 3. Invite the bot to your server with "Send Messages" and "Embed Links" permissions
 4. Enable Developer Mode in Discord, right-click your channel, and copy the ID
+5. **Moralis**: Sign up at [Moralis.io](https://moralis.io) and get your API key from the dashboard
 
 ### 3. Run
 ```bash
@@ -34,7 +36,7 @@ npm start
 
 ## 🎯 What It Does
 
-- **Monitors**: Checks Pump.fun API every 60 seconds for new meme coins
+- **Monitors**: Checks Moralis API every 60 seconds for new Pump.fun meme coins
 - **Analyzes**: Calculates a 0-100 trend score based on:
   - Volume (40%)
   - Liquidity (30%)
@@ -85,16 +87,16 @@ Volume: 72 | Liquidity: 68 | Holders: 85 | Age: 93
 ## 🔧 Troubleshooting
 
 **Bot not sending alerts?**
-- Check Discord bot token and channel ID are correct
+- Check Discord bot token, channel ID, and Moralis API key are correct
 - Verify bot is invited to your server and online
 - Verify bot has permissions to send messages in the channel
 - Verify coins meet minimum thresholds
 - Ensure trend scores are ≥ 50
 
 **No coins detected?**
-- Pump.fun API may be rate limiting
+- Moralis API may be rate limiting (check your API quota)
 - Check internet connection
-- Verify API endpoint is accessible
+- Verify Moralis API key is valid
 
 ## 📚 More Info
 
