@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
-  discordWebhookUrl: process.env.DISCORD_WEBHOOK_URL || '',
+  discordBotToken: process.env.DISCORD_BOT_TOKEN || '',
+  discordChannelId: process.env.DISCORD_CHANNEL_ID || '',
   pumpfunApiUrl: process.env.PUMPFUN_API_URL || 'https://frontend-api.pump.fun/coins',
   pollInterval: parseInt(process.env.POLL_INTERVAL || '60', 10) * 1000,
   
@@ -23,8 +24,13 @@ export const config = {
 };
 
 export function validateConfig(): boolean {
-  if (!config.discordWebhookUrl) {
-    console.error('Error: DISCORD_WEBHOOK_URL is not set in .env file');
+  if (!config.discordBotToken) {
+    console.error('Error: DISCORD_BOT_TOKEN is not set in .env file');
+    return false;
+  }
+  
+  if (!config.discordChannelId) {
+    console.error('Error: DISCORD_CHANNEL_ID is not set in .env file');
     return false;
   }
   

@@ -1,12 +1,50 @@
-import axios from 'axios';
+import { Client, GatewayIntentBits, EmbedBuilder, TextChannel } from 'discord.js';
 import { config } from './config';
 import { AlertData } from './types';
 
 export class DiscordNotifier {
-  private webhookUrl: string;
+  private client: Client;
+  private channelId: string;
+  private isReady: boolean = false;
 
   constructor() {
-    this.webhookUrl = config.discordWebhookUrl;
+    this.channelId = config.discordChannelId;
+    this.client = new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+      ],
+    });
+
+    this.client.on('ready', () => {
+      console.log(`✅ Discord bot logged in as ${this.client.user?.tag}`);
+      this.isReady = true;
+    });
+
+    this.client.on('error', (error) => {
+      console.error('Discord client error:', error);
+    });
+  }
+
+  /**
+   * Initialize the Discord bot connection
+   */
+  async connect(): Promise<void> {
+    try {
+      await this.client.login(config.discordBotToken);
+      
+      // Wait for the bot to be ready
+      await new Promise<void>((resolve) => {
+        if (this.isReady) {
+          resolve();
+        } else {
+          this.client.once('ready', () => resolve());
+        }
+      });
+    } catch (error) {
+      console.error('Failed to connect to Discord:', error);
+      throw error;
+    }
   }
 
   /**
@@ -14,29 +52,26 @@ export class DiscordNotifier {
    */
   async sendAlert(alertData: AlertData): Promise<boolean> {
     try {
+      if (!this.isReady) {
+        console.error('Discord bot is not ready yet');
+        return false;
+      }
+
+      const channel = await this.client.channels.fetch(this.channelId);
+      
+      if (!channel || !(channel instanceof TextChannel)) {
+        console.error('Invalid channel or channel is not a text channel');
+        return false;
+      }
+
       const embed = this.formatAlertEmbed(alertData);
       
-      const payload = {
-        username: 'Boom Bot 🚀',
-        avatar_url: 'https://i.imgur.com/4M34hi2.png',
-        embeds: [embed],
-      };
-
-      await axios.post(this.webhookUrl, payload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 10000,
-      });
+      await channel.send({ embeds: [embed] });
 
       console.log(`✅ Alert sent for ${alertData.coin.symbol} (Score: ${alertData.trendScore.score})`);
       return true;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error sending Discord alert:', error.message);
-      } else {
-        console.error('Unexpected error sending alert:', error);
-      }
+      console.error('Error sending Discord alert:', error);
       return false;
     }
   }
@@ -44,7 +79,7 @@ export class DiscordNotifier {
   /**
    * Format coin data into a Discord embed
    */
-  private formatAlertEmbed(alertData: AlertData) {
+  private formatAlertEmbed(alertData: AlertData): EmbedBuilder {
     const { coin, trendScore } = alertData;
     
     // Determine color based on trend score
@@ -58,11 +93,11 @@ export class DiscordNotifier {
     const liquidityFormatted = this.formatNumber(coin.liquidity);
     const marketCapFormatted = this.formatNumber(coin.marketCap || 0);
     
-    return {
-      title: `🚀 ${coin.name} (${coin.symbol})`,
-      description: coin.description || 'New meme coin detected!',
-      color: color,
-      fields: [
+    const embed = new EmbedBuilder()
+      .setTitle(`🚀 ${coin.name} (${coin.symbol})`)
+      .setDescription(coin.description || 'New meme coin detected!')
+      .setColor(color)
+      .addFields(
         {
           name: '📊 Trend Score',
           value: `**${trendScore.score}/100** ${this.getScoreEmoji(trendScore.score)}`,
@@ -107,14 +142,16 @@ export class DiscordNotifier {
           name: '🔗 Contract Address',
           value: `\`${coin.mint}\``,
           inline: false,
-        },
-      ],
-      thumbnail: coin.image_uri ? { url: coin.image_uri } : undefined,
-      footer: {
-        text: 'Boom Bot - Pump.fun Monitor',
-      },
-      timestamp: new Date(alertData.timestamp).toISOString(),
-    };
+        }
+      )
+      .setFooter({ text: 'Boom Bot - Pump.fun Monitor' })
+      .setTimestamp(new Date(alertData.timestamp));
+
+    if (coin.image_uri) {
+      embed.setThumbnail(coin.image_uri);
+    }
+
+    return embed;
   }
 
   /**
@@ -165,5 +202,13 @@ export class DiscordNotifier {
       return (num / 1_000).toFixed(2) + 'K';
     }
     return num.toFixed(2);
+  }
+
+  /**
+   * Disconnect the Discord bot
+   */
+  async disconnect(): Promise<void> {
+    await this.client.destroy();
+    this.isReady = false;
   }
 }

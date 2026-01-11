@@ -33,6 +33,10 @@ class BoomBot {
     console.log(`👥 Min holder count: ${config.minHolderCount}`);
     console.log('');
 
+    // Connect to Discord
+    console.log('🔌 Connecting to Discord...');
+    await this.discordNotifier.connect();
+
     this.isRunning = true;
 
     // Run initial scan
@@ -46,19 +50,16 @@ class BoomBot {
     }, config.pollInterval);
 
     // Handle graceful shutdown
-    process.on('SIGINT', () => {
+    const shutdown = async () => {
       console.log('\n🛑 Shutting down Boom Bot...');
       this.isRunning = false;
       clearInterval(intervalId);
+      await this.discordNotifier.disconnect();
       process.exit(0);
-    });
+    };
 
-    process.on('SIGTERM', () => {
-      console.log('\n🛑 Shutting down Boom Bot...');
-      this.isRunning = false;
-      clearInterval(intervalId);
-      process.exit(0);
-    });
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
   }
 
   /**

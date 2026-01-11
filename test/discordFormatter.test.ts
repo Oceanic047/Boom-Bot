@@ -53,7 +53,7 @@ function testDiscordFormatting() {
   console.log(`Market Cap: $${sampleCoin.marketCap?.toLocaleString()}`);
   console.log('─────────────────────────────────────────');
   console.log('\n✅ Alert formatting test completed successfully!');
-  console.log('   (Actual Discord sending requires DISCORD_WEBHOOK_URL in .env)');
+  console.log('   (Actual Discord sending requires DISCORD_BOT_TOKEN and DISCORD_CHANNEL_ID in .env)');
 }
 
 testDiscordFormatting();
