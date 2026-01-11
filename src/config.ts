@@ -7,6 +7,9 @@ export const config = {
   pumpfunApiUrl: process.env.PUMPFUN_API_URL || 'https://frontend-api.pump.fun/coins',
   pollInterval: parseInt(process.env.POLL_INTERVAL || '60', 10) * 1000,
   
+  // Alert threshold
+  alertScoreThreshold: parseInt(process.env.ALERT_SCORE_THRESHOLD || '50', 10),
+  
   // Thresholds for trend scoring
   minVolumeThreshold: parseFloat(process.env.MIN_VOLUME_THRESHOLD || '1000'),
   minLiquidityThreshold: parseFloat(process.env.MIN_LIQUIDITY_THRESHOLD || '5000'),

@@ -33,6 +33,27 @@ export class PumpFunClient {
       const now = Date.now();
       const coins: CoinData[] = response.data.map((coin: any) => {
         const createdTime = coin.created_timestamp * 1000; // Convert to milliseconds
+        
+        // Log warnings when using fallback fields
+        if (!coin.mint && coin.address) {
+          console.warn(`Using fallback 'address' field for mint`);
+        }
+        if (!coin.image_uri && coin.image) {
+          console.warn(`Using fallback 'image' field for image_uri`);
+        }
+        if (!coin.volume_24h && coin.volume) {
+          console.warn(`Using fallback 'volume' field for volume_24h`);
+        }
+        if (!coin.virtual_sol_reserves && coin.liquidity) {
+          console.warn(`Using fallback 'liquidity' field for virtual_sol_reserves`);
+        }
+        if (!coin.holder_count && coin.holders) {
+          console.warn(`Using fallback 'holders' field for holder_count`);
+        }
+        if (!coin.usd_market_cap && coin.market_cap) {
+          console.warn(`Using fallback 'market_cap' field for usd_market_cap`);
+        }
+        
         return {
           mint: coin.mint || coin.address || '',
           name: coin.name || 'Unknown',
@@ -41,11 +62,11 @@ export class PumpFunClient {
           image_uri: coin.image_uri || coin.image || '',
           created_timestamp: coin.created_timestamp || Math.floor(now / 1000),
           age: Math.floor((now - createdTime) / 1000), // Age in seconds
-          volume24h: parseFloat(coin.usd_market_cap || coin.volume_24h || '0'),
+          volume24h: parseFloat(coin.volume_24h || coin.volume || '0'),
           liquidity: parseFloat(coin.virtual_sol_reserves || coin.liquidity || '0'),
           holderCount: parseInt(coin.holder_count || coin.holders || '0', 10),
           priceChange24h: parseFloat(coin.price_change_24h || '0'),
-          marketCap: parseFloat(coin.usd_market_cap || '0'),
+          marketCap: parseFloat(coin.usd_market_cap || coin.market_cap || '0'),
         };
       });
 

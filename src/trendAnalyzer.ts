@@ -103,7 +103,6 @@ export class TrendAnalyzer {
    * Determine if a coin should trigger an alert based on trend score
    */
   shouldAlert(trendScore: TrendScore): boolean {
-    // Alert if trend score is above 50 (configurable threshold)
-    return trendScore.score >= 50;
+    return trendScore.score >= config.alertScoreThreshold;
   }
 }
