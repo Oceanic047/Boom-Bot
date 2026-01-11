@@ -247,6 +247,12 @@ npm run lint
 - Check internet connectivity
 - Verify Moralis API key is valid and active
 - Check that you haven't exceeded your API quota
+- The bot uses the Moralis `/token/mainnet/pairs` endpoint by default
+- If you need to use a different Moralis endpoint, you can modify `pumpfunClient.ts`
+
+### Note on Moralis API
+
+The bot is configured to use the Moralis Web3 Data API which provides reliable access to Solana blockchain data. The current implementation uses the token pairs endpoint which returns trading pair information. Depending on your specific needs and the Moralis API plan you're using, you may need to adjust the endpoint or data parsing logic in `src/pumpfunClient.ts`.
 
 ## License
 

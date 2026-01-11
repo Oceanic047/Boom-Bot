@@ -19,7 +19,9 @@ export class PumpFunClient {
    */
   async fetchRecentCoins(): Promise<CoinData[]> {
     try {
-      // Use Moralis API to get SPL tokens filtered by Pump.fun program
+      // Use Moralis API to get SPL tokens
+      // Note: Moralis provides various endpoints for Solana tokens
+      // This uses the pairs endpoint which returns trading pair data
       const endpoint = `${this.moralisBaseUrl}/token/mainnet/pairs`;
       
       const response = await axios.get(endpoint, {
@@ -49,8 +51,14 @@ export class PumpFunClient {
       const now = Date.now();
       const coins: CoinData[] = dataArray
         .filter((token: any) => {
-          // Filter for Pump.fun tokens if program address is available
-          return !token.program || token.program === this.pumpfunProgramAddress;
+          // Only include tokens that have the Pump.fun program address
+          // If program address is not provided in the response, include all tokens
+          // as filtering may not be available in this endpoint
+          if (token.program) {
+            return token.program === this.pumpfunProgramAddress;
+          }
+          // Include tokens without program field (endpoint may not provide it)
+          return true;
         })
         .map((token: any) => {
           // Parse creation timestamp - Moralis may provide it in different formats
@@ -72,7 +80,6 @@ export class PumpFunClient {
           const volume24h = parseFloat(
             token.volume24h || 
             token.volume?.h24 || 
-            token.priceChange?.h24 || 
             '0'
           );
           
@@ -97,6 +104,12 @@ export class PumpFunClient {
             '0', 
             10
           );
+
+          const priceChange24h = parseFloat(
+            token.priceChange24h || 
+            token.priceChange?.percentage || 
+            '0'
+          );
           
           return {
             mint: tokenAddress,
@@ -109,7 +122,7 @@ export class PumpFunClient {
             volume24h: volume24h,
             liquidity: liquidity,
             holderCount: holderCount,
-            priceChange24h: parseFloat(token.priceChange24h || token.priceChange?.percentage || '0'),
+            priceChange24h: priceChange24h,
             marketCap: marketCap,
           };
         });
@@ -120,7 +133,8 @@ export class PumpFunClient {
         console.error('Error fetching coins from Moralis API:', error.message);
         if (error.response) {
           console.error('Response status:', error.response.status);
-          console.error('Response data:', JSON.stringify(error.response.data).substring(0, 200));
+          const MAX_ERROR_LOG_LENGTH = 200;
+          console.error('Response data:', JSON.stringify(error.response.data).substring(0, MAX_ERROR_LOG_LENGTH));
         }
       } else {
         console.error('Unexpected error fetching coins:', error);
