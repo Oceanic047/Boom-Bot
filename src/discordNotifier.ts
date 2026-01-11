@@ -31,16 +31,19 @@ export class DiscordNotifier {
    */
   async connect(): Promise<void> {
     try {
-      await this.client.login(config.discordBotToken);
-      
-      // Wait for the bot to be ready
-      await new Promise<void>((resolve) => {
+      // Set up the ready listener before logging in to avoid race condition
+      const readyPromise = new Promise<void>((resolve) => {
         if (this.isReady) {
           resolve();
         } else {
           this.client.once('ready', () => resolve());
         }
       });
+
+      await this.client.login(config.discordBotToken);
+      
+      // Wait for the bot to be ready
+      await readyPromise;
     } catch (error) {
       console.error('Failed to connect to Discord:', error);
       throw error;
