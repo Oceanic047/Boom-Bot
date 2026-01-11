@@ -1,0 +1,30 @@
+{
+  "name": "boom-bot",
+  "version": "1.0.0",
+  "description": "A bot that monitors meme coin launches via Pump.fun API and posts alerts to Discord",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": [
+    "pump.fun",
+    "meme-coin",
+    "discord-bot",
+    "crypto"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2"
+  }
+}
