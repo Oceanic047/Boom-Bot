@@ -32,7 +32,7 @@ A sophisticated Discord bot that monitors meme coin launches via the Pump.fun AP
 
 - Node.js 18+ 
 - npm or yarn
-- A Discord webhook URL
+- A Discord bot token and channel ID
 
 ### Setup
 
@@ -52,18 +52,41 @@ npm install
 cp .env.example .env
 ```
 
-4. Edit `.env` and add your Discord webhook URL:
+4. Edit `.env` and add your Discord bot token and channel ID:
 ```env
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+DISCORD_BOT_TOKEN=your_bot_token_here
+DISCORD_CHANNEL_ID=your_channel_id_here
 ```
+
+### How to Get Discord Bot Token and Channel ID
+
+1. **Create a Discord Bot**:
+   - Go to [Discord Developer Portal](https://discord.com/developers/applications)
+   - Click "New Application" and give it a name
+   - Go to the "Bot" tab and click "Add Bot"
+   - Under the bot's token section, click "Reset Token" and copy it (this is your `DISCORD_BOT_TOKEN`)
+   - Enable these Privileged Gateway Intents:
+     - Server Members Intent (optional)
+     - Message Content Intent (optional)
+
+2. **Invite Bot to Your Server**:
+   - Go to the "OAuth2" > "URL Generator" tab
+   - Select scopes: `bot`
+   - Select bot permissions: `Send Messages`, `Embed Links`, `Read Messages/View Channels`
+   - Copy the generated URL and open it in your browser to invite the bot to your server
+
+3. **Get Channel ID**:
+   - Enable Developer Mode in Discord: User Settings > Advanced > Developer Mode
+   - Right-click on the channel where you want alerts and click "Copy ID" (this is your `DISCORD_CHANNEL_ID`)
 
 ## Configuration
 
 Edit `.env` to customize bot behavior:
 
 ```env
-# Discord Webhook (Required)
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+# Discord Bot (Required)
+DISCORD_BOT_TOKEN=your_bot_token_here
+DISCORD_CHANNEL_ID=your_channel_id_here
 
 # API Endpoint
 PUMPFUN_API_URL=https://frontend-api.pump.fun/coins
@@ -158,7 +181,7 @@ Boom-Bot/
 │   ├── types.ts              # TypeScript type definitions
 │   ├── pumpfunClient.ts      # Pump.fun API client
 │   ├── trendAnalyzer.ts      # Trend scoring algorithm
-│   └── discordNotifier.ts    # Discord webhook integration
+│   └── discordNotifier.ts    # Discord bot integration
 ├── dist/                     # Compiled JavaScript (generated)
 ├── .env                      # Environment variables (create from .env.example)
 ├── .env.example              # Example environment configuration
@@ -185,16 +208,19 @@ npm run lint
 
 ### Bot not starting
 
-- Ensure `DISCORD_WEBHOOK_URL` is set in `.env`
+- Ensure `DISCORD_BOT_TOKEN` and `DISCORD_CHANNEL_ID` are set in `.env`
 - Check Node.js version (requires 18+)
 - Verify dependencies are installed: `npm install`
+- Verify bot has been invited to your server
+- Verify bot has permissions to send messages in the channel
 
 ### No alerts appearing
 
-- Check webhook URL is valid
+- Check bot token and channel ID are valid
 - Verify coins meet minimum thresholds
 - Ensure trend scores are ≥50
-- Check Discord webhook rate limits
+- Check bot has permission to view and send messages in the channel
+- Verify the bot is online in your Discord server
 
 ### API errors
 

@@ -14,10 +14,17 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and set your Discord webhook URL:
+Edit `.env` and set your Discord bot token and channel ID:
 ```env
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+DISCORD_BOT_TOKEN=your_bot_token_here
+DISCORD_CHANNEL_ID=your_channel_id_here
 ```
+
+**How to get these values:**
+1. Create a bot at [Discord Developer Portal](https://discord.com/developers/applications)
+2. Copy the bot token from the "Bot" tab
+3. Invite the bot to your server with "Send Messages" and "Embed Links" permissions
+4. Enable Developer Mode in Discord, right-click your channel, and copy the ID
 
 ### 3. Run
 ```bash
@@ -78,7 +85,9 @@ Volume: 72 | Liquidity: 68 | Holders: 85 | Age: 93
 ## 🔧 Troubleshooting
 
 **Bot not sending alerts?**
-- Check Discord webhook URL is correct
+- Check Discord bot token and channel ID are correct
+- Verify bot is invited to your server and online
+- Verify bot has permissions to send messages in the channel
 - Verify coins meet minimum thresholds
 - Ensure trend scores are ≥ 50
 

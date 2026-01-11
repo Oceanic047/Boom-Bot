@@ -29,7 +29,7 @@
 - ✅ Configurable alert threshold (default: 50)
 
 ### 5. Post Alerts to Discord
-- ✅ Discord webhook integration via `discordNotifier.ts`
+- ✅ Discord bot integration via `discordNotifier.ts`
 - ✅ Rich embeds with color coding (green/yellow/orange/red)
 - ✅ Formatted token stats:
   - Trend score with fire emoji indicators
@@ -50,7 +50,7 @@ src/
 ├── types.ts              - TypeScript type definitions
 ├── pumpfunClient.ts      - Pump.fun API client
 ├── trendAnalyzer.ts      - Trend scoring engine
-└── discordNotifier.ts    - Discord webhook integration
+└── discordNotifier.ts    - Discord bot integration
 ```
 
 ### Key Features
@@ -62,7 +62,7 @@ src/
 - **Security**: Passed CodeQL security scan with 0 vulnerabilities
 
 ### Configuration Options
-- Discord webhook URL (required)
+- Discord bot token and channel ID (required)
 - API endpoint URL
 - Polling interval
 - Alert score threshold
@@ -71,6 +71,7 @@ src/
 
 ### Dependencies
 - **axios**: HTTP client for API requests
+- **discord.js**: Discord bot client library
 - **dotenv**: Environment variable management
 - **TypeScript**: Type-safe development
 - **ts-node**: TypeScript execution
@@ -88,7 +89,7 @@ src/
 # Setup
 npm install
 cp .env.example .env
-# Edit .env with Discord webhook URL
+# Edit .env with Discord bot token and channel ID
 
 # Run
 npm run build
